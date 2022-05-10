@@ -6,14 +6,16 @@ import itertools
 
 def check_d_separation_total(graph, pair, z):
     edges = graph.edges
+    graph2 = nx.Graph()
+    graph2.add_edges_from(edges)
     #pair is a list containg two nodes ['a', 'b']
     #z is a set of variable containing a set of nodes ["a"]
 
     #Create all the paths between the two nodes
-    paths = list(nx.all_simple_paths(graph, pair[0], pair[1]))
+    paths = list(nx.all_simple_paths(graph2, pair[0], pair[1]))
     is_d_separate_path = []
     # Preliminary check if there exits a path that's unblockable
-    if(preliminary_check == True):
+    if(preliminary_check(paths) == False):
         return False
     else:
         for path in paths:
@@ -22,7 +24,8 @@ def check_d_separation_total(graph, pair, z):
             is_d_separate = check_d_separation(property_list, adjecent_nodes, z, graph)
             is_d_separate_path.append(is_d_separate)
 
-        if True in is_d_separate_path:
+        # Need to be true for all the 
+        if not False in is_d_separate_path:
             return True
         else:
             return False
@@ -32,6 +35,8 @@ def preliminary_check(paths):
     for path in paths:
         if len(path) == 2:
             return False
+        else:
+            return True
 
 def create_list_adjencent_nodes(path):
     adjecent_nodes = []
@@ -81,7 +86,13 @@ def check_d_separation(property_list, adjecent_nodes, z, graph):
         return False
     
 if __name__ == "__main__":
-    graph = nx.DiGraph()
-    graph.add_edges_from([("x", "a"), ("a", "b"), ("a", "e"), ("b", "c"), ("b", "d"), ("d", "e")])
-    pair = ["x", "d"]
-    print(check_d_separation_total(graph, pair, ["b"]))
+    # graph = nx.DiGraph()
+    # graph.add_edges_from([("x", "a"), ("a", "b"), ("a", "e"), ("b", "c"), ("b", "d"), ("d", "e")])
+    # pair = ["x", "d"]
+    graph1 = nx.DiGraph()
+    graph1.add_edges_from([("s", "a"), ("l", "a"), ("l", "b"), ("t", "b")])
+    graph2 = nx.Graph()
+    graph2.add_edges_from(graph1.edges)
+  
+    pair = ["a", "b"]
+    print(check_d_separation_total(graph1, pair, []))
