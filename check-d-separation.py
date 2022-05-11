@@ -3,6 +3,7 @@ import networkx as nx
 import numpy as np
 import itertools
 from checkdseparation import check_d_separation_total
+from toolz import unique
 
 def d_separation_list(graph):
     nodes = np.array(graph.nodes)
@@ -23,13 +24,23 @@ def d_separation_list(graph):
         return output
     # Get all the nodes:
     sets_z = powerset(nodes)
-
     for i in range(len(combination)):
+        # Now I get a pair of nodes I can regenerate the powerset for the nodes
+        new_nodes = make_z_not_overlap_with_nodes(list(combination[i]), list(nodes))
+        sets_z = powerset(new_nodes)
         for j in range(len(sets_z)):
             if(check_d_separation_total(graph, combination[i], sets_z[j])==True):
-                print(f'{combination[i][0]} and {combination[i][1]} are d-separated by {sets_z[j]}')
-            else:
-                print(f'{combination[i][0]} and {combination[i][1]} are not d-separated by {sets_z[j]}')
+                    print(f'{combination[i][0]} and {combination[i][1]} are d-separated by {sets_z[j]}')
+
+
+
+def make_z_not_overlap_with_nodes(pair, sets_z):
+    new_set = sets_z
+    for element in pair:
+        if element in new_set:
+            new_set.remove(element)
+
+    return new_set
 
 if __name__ == "__main__":
    # graph = nx.DiGraph()
@@ -42,3 +53,6 @@ if __name__ == "__main__":
     graph1 = nx.DiGraph()
     graph1.add_edges_from([("s", "a"), ("l", "a"), ("l", "b"), ("t", "b")])
     d_separation_list(graph1)
+
+
+
