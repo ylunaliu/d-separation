@@ -13,6 +13,7 @@ def check_d_separation_total(graph, pair, z):
 
     #Create all the paths between the two nodes
     paths = list(nx.all_simple_paths(graph2, pair[0], pair[1]))
+    print(paths)
     is_d_separate_path = []
     # Preliminary check if there exits a path that's unblockable
     if(preliminary_check(paths) == False):
